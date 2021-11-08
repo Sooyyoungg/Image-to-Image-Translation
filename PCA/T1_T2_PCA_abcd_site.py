@@ -120,7 +120,7 @@ def plot_site(data, method='PCA', target='abcd_site', norm=False, remove_zero_co
     else:
         if not os.path.exists('/scratch/GANBERT/sooyoung/flattened_t1_t2_wo_norm.npy'):
             flattened_images_T1_T2 = flatten(new_data, total_dimension, norm, remove_zero_column)
-            #np.save('/scratch/GANBERT/sooyoung/flattened_t1_t2_wo_norm', flattened_images_T1_T2)
+            np.save('/scratch/GANBERT/sooyoung/flattened_t1_t2_wo_norm', flattened_images_T1_T2)
         else:
             flattened_images_T1_T2 = np.load('/scratch/GANBERT/sooyoung/flattened_t1_t2_wo_norm.npy')
 
