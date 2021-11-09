@@ -1,5 +1,6 @@
 ### Basic
 import argparse
+import gc
 import os
 import numpy as np
 import pandas as pd
@@ -12,6 +13,8 @@ from DataSplit import DataSplit
 from models.basic_GAN import Generator, Discriminator
 from utils import GANLoss
 from utils import set_requires_grad
+
+gc.collect()
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(device)
@@ -193,3 +196,5 @@ with torch.no_grad():
     test_loss_D = np.array(test_loss_D)
     test_loss_G = np.array(test_loss_G)
     print("Test: [Avg D loss: %f] [Avg G loss: %f]" % (np.mean(test_loss_D), np.mean(test_loss_G.item)))
+
+gc.collect()

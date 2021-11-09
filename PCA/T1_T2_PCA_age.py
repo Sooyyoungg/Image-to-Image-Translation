@@ -12,6 +12,7 @@ import plotly.express as px
 import nibabel as nib
 import torch
 #%matplotlib inline
+import gc
 
 ###
 def flatten(data, feature_dimension, norm=True, remove_zero_column=True):
@@ -60,6 +61,9 @@ def flatten(data, feature_dimension, norm=True, remove_zero_column=True):
             flattened_images_T1.append(flattened_T1_image)
             flattened_images_T2.append(flattened_T2_image)
             # print(flattened_T1_image.shape)   # (16777216,) == flattened_T2_image.shape
+
+            del (T1_image)
+            del (T2_image)
 
         flattened_images_T1 = np.array(flattened_images_T1)
         flattened_images_T2 = np.array(flattened_images_T2)
@@ -166,5 +170,7 @@ def plot_PCA(new_data, target, num_level, flattened_images, n_components):
     plt.show()
 
 ### Main
+gc.collect()
 output_final = pd.read_csv("/home/connectome/conmaster/GANBERT/abcd_t1_t2_diffusion_info.csv")
 plot_site(output_final, method='PCA', target='age', norm=False, remove_zero_column=True)
+gc.collect()
