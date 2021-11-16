@@ -17,7 +17,7 @@ def get_mean_std(data):
     for row in tqdm(range(data.shape[0])):
         ### T1
         t1_prep_image = nib.load(data.loc[row, 't1_directory']).get_fdata()
-        t_mask = nib.load(data.loc[row]['t12_qc_mask']).get_fdata()
+        t_mask = nib.load(data.loc[row]['t12_mask']).get_fdata()
         assert t1_prep_image.shape == t_mask.shape
 
         flattened_t1_image = t1_prep_image.flatten()
@@ -31,7 +31,7 @@ def get_mean_std(data):
 
         ### T2
         t2_prep_image = nib.load(data.loc[row, 't2_directory']).get_fdata()
-        t_mask = nib.load(data.loc[row]['t12_qc_mask']).get_fdata()
+        t_mask = nib.load(data.loc[row]['t12_mask']).get_fdata()
         assert t2_prep_image.shape == t_mask.shape
 
         flattened_t2_image = t2_prep_image.flatten()

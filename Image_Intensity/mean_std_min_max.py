@@ -7,9 +7,11 @@ from utils import get_min_max
 ### Data Loader
 info_path = '/home/connectome/conmaster/GANBERT/abcd_t1_t2_diffusion_info.csv'
 tot_data = pd.read_csv(info_path)
+
+print("loading finish")
+
 image_columns = ['t1_directory', 't2_directory', 'dti_directory', 'dwi_directory']
 data_list = []
-
 for i in range(len(tot_data)):
     subject_data = []
     t1_image = nib.load(tot_data.loc[i]['t1_directory']).get_fdata()
@@ -25,6 +27,7 @@ for i in range(len(tot_data)):
 
     subject_data.append([t1_image, t2_image, [fa_image, md_image], dwi_image])
     data_list.append(subject_data)
+    print(i)
 
 image_data = pd.DataFrame(data_list, columns = image_columns)
 print(image_data.shape)  # (8921, 4) 여야 함
