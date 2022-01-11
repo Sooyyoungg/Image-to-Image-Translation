@@ -30,7 +30,7 @@ do
         cp $T1 "$data_dir/$sub.T1.npy"
         cp $T2 "$data_dir/$sub.T2.npy"
         cp $dwi "$data_dir/$sub.dwi.npy"
-        cp $grad "$data_dir/$sub.grad.npy"
+        cp $grad "$data_dir/$sub.grad.b"
 
         count=$((count + 1))
         echo $count
