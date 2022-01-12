@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-from Pix2Pix.utils.torchutils import weights_init, get_scheduler
+from Benchmark_paper.utils.torchutils import weights_init, get_scheduler
 import os
 from networks import smri2scalarGen
 
@@ -83,29 +83,30 @@ class smri2scalar_Trainer(nn.Module):
         return_dict['loss'] = loss_derives.item()
         return return_dict
 
-    def train(self, data_dict, targets):
+    def train(self, data_dict, targets_dwi):
         self.gen_opt.zero_grad()
         self.loss_derives = torch.zeros([]).to(self.device)
         self.loss_g = torch.zeros([]).to(self.device)
         self.loss_d = torch.zeros([]).to(self.device)
         in_i, return_dict = self.prepare_data(data_dict)#torch.cat((in_b0, in_t2),dim=1)
 
-        target = None
-        for ti in range(len(targets)):
-            return_dict['trg_%s' % targets[ti]] = data_dict[targets[ti]][0, 0].cpu().numpy()
-            if target is None:
-                target = data_dict[targets[ti]].to(self.device).float()
+        target_dwi = None
+        for ti in range(len(targets_dwi)):
+            return_dict['target_%s' % targets_dwi[ti]] = data_dict[targets_dwi[ti]][0, 0].cpu().numpy()
+            if target_dwi is None:
+                target_dwi = data_dict[targets_dwi[ti]].to(self.device).float()
             else:
-                target = torch.cat((target, data_dict[targets[ti]].to(self.device).float()), dim=1)
+                target_dwi = torch.cat((target_dwi, data_dict[targets_dwi[ti]].to(self.device).float()), dim=1)
         pred_i = self.gen_a.forward(in_i)
 
-        self.loss_derives += self.l1_w * self.recon_criterion(pred_i, target, in_i.sum(dim=1)>0.)
+        # 생성한 fake dwi와 real dwi 비교해 loss 계산
+        self.loss_derives += self.l1_w * self.recon_criterion(pred_i, target_dwi, in_i.sum(dim=1)>0.)
         total_loss = self.loss_derives
         total_loss.backward()
         self.gen_opt.step()
 
-        for ti in range(len(targets)):
-            return_dict[targets[ti]] = pred_i[0, ti].detach().cpu().numpy()
+        for ti in range(len(targets_dwi)):
+            return_dict[targets_dwi[ti]] = pred_i[0, ti].detach().cpu().numpy()
         return return_dict
 
     def update_learning_rate(self):

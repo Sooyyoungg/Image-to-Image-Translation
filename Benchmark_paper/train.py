@@ -6,7 +6,7 @@ import shutil
 import torch.utils.data
 from data_loader import data_load
 from utils.utilization import mkdirs, convert, get_config
-from Pix2Pix.models.model import smri2scalar_Trainer
+from Benchmark_paper.models.model import smri2scalar_Trainer
 from utils.visualization import tensorboard_vis
 
 parser = argparse.ArgumentParser()
